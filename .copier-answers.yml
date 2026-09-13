@@ -1,0 +1,15 @@
+# Changes to this file will be overwritten by Copier updates.
+# Review it with the template source before running `copier update`.
+_commit: v0.3.0
+_src_path: git@github.com:caseneuve/template-pi-package.git
+copyright_year: 2026
+extension_name: assistant-outline
+github_owner: caseneuve
+initial_version: 0.0.0
+package_description: Conversation navigation and transient session-note tools for
+  Pi.
+package_name: pi-conversation-tools
+pi_api_version: 0.85.1
+repository_name: pi-conversation-tools
+resource_types:
+- extensions
