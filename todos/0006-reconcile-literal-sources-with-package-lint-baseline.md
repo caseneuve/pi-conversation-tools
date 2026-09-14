@@ -28,4 +28,4 @@ Observed after literal source copy. The current Oxlint output has widespread `re
 
 Biome formatting and the two pre-existing unused declarations were resolved as a mechanical checkpoint after the extraction; the behavior-sensitive local Oxlint work remains open.
 
-On 2026-09-14 the lint boundary was clarified: anti-slop is for production code and its tests, not infrastructure. Todo 0004 was closed because its three findings were outside that boundary. Copier owns restoring the intended Biome-only `check:ci`; this todo owns a separate correctly scoped local anti-slop command.
+On 2026-09-14 the lint boundary was clarified: anti-slop is for production code and its tests, not infrastructure. Todo 0004 was closed because its three findings were outside that boundary. A Copier v0.3 update made no changes because v0.3 makes `package.json` repository-owned after initial generation. This todo therefore owns restoring the intended Biome-only `check:ci` and adding a separate correctly scoped local anti-slop command. The template already generates a Biome-only `check:ci`, but its bare local `oxlint` invocation still needs separate upstream correction for future packages.
