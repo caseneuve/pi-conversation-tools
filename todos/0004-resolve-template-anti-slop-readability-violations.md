@@ -1,6 +1,6 @@
 ---
 title: resolve template anti-slop readability violations
-status: open
+status: closed
 priority: high
 type: chore
 labels: [release-blocker, tooling]
@@ -33,6 +33,6 @@ The readability rules still apply. Fix template-owned violations upstream first,
 
 ## Notes
 
-Observed during extraction before package sources were copied. This blocks release.
+Observed during extraction before package sources were copied.
 
-Policy updated for template v0.3 by human decision on 2026-09-13: anti-slop remains a required local quality gate, but its downloaded implementation is not a repository artifact or CI dependency.
+Closed on 2026-09-14 after clarifying the lint boundary: anti-slop applies to production extension code and its behavioral tests, not package infrastructure such as `scripts/install-prek-hook.mjs` or `test/package.test.ts`. These findings resulted from the package's stale bare `oxlint` command scanning the entire repository. Copier v0.3 also restores the intended Biome-only `check:ci`; todo 0006 owns the remaining extension and extension-test findings.

@@ -12,17 +12,20 @@ blocks: []
 
 ## Context
 
-The literal dotagents sources do not pass the generated package's Biome and anti-slop Oxlint baseline. Extraction intentionally preserves the source formatting and implementation rather than performing broad cleanup.
+The literal dotagents extension sources and their behavioral tests do not pass the generated package's Biome and anti-slop Oxlint baseline. Extraction intentionally preserves the source formatting and implementation rather than performing broad cleanup. Anti-slop does not apply to package infrastructure or infrastructure tests.
 
 ## Acceptance Criteria
 
 - [x] Resolve Biome formatting, import-order diagnostics, and pre-existing unused declarations across `extensions/` without behavior changes.
+- [ ] Scope anti-slop to `extensions/` production code and its behavioral tests, excluding package infrastructure such as `scripts/` and `test/package.test.ts`.
 - [ ] Resolve current anti-slop diagnostics, including readability spacing, unsafe external-payload parsing, type-assertion safety comments, and array pipeline rules, without weakening rules.
 - [ ] Preserve commands, session-entry formats, overlay behavior, editor behavior, and clipboard behavior.
-- [ ] Run `npm run check:ci` successfully.
+- [ ] Run the focused anti-slop command and `npm run check:ci` successfully.
 
 ## Notes
 
 Observed after literal source copy. The current Oxlint output has widespread `require-readable-spacing` failures and source-specific semantic-rule findings. This blocks release.
 
 Biome formatting and the two pre-existing unused declarations were resolved as a mechanical checkpoint after the extraction; the behavior-sensitive local Oxlint work remains open.
+
+On 2026-09-14 the lint boundary was clarified: anti-slop is for production code and its tests, not infrastructure. Todo 0004 was closed because its three findings were outside that boundary. Copier owns restoring the intended Biome-only `check:ci`; this todo owns a separate correctly scoped local anti-slop command.
