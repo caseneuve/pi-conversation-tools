@@ -9,30 +9,35 @@ import type {
 
 export const ASSISTANT_OUTLINE_COMMENTS_TYPE = "assistant-outline-comments";
 
-type CommentCustomEntry = SessionEntry & {
-  type: "custom";
-  customType?: string;
-  data?: {
-    messageEntryId?: string;
-    comments?: Record<string, unknown>;
-  };
-};
+// Persisted custom-entry data is untrusted, including legacy/malformed snapshots.
+function isCommentDataObject(value: unknown): value is object {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function isCommentText(value: unknown): value is string {
+  return typeof value === "string";
+}
 
 export function getStoredCommentsForMessage(branch: SessionEntry[], messageEntryId: string): SectionComments {
   let comments: SectionComments = {};
 
   for (const entry of branch) {
-    const customEntry = entry as CommentCustomEntry;
-    if (customEntry.type !== "custom") continue;
-    if (customEntry.customType !== ASSISTANT_OUTLINE_COMMENTS_TYPE) continue;
-    if (customEntry.data?.messageEntryId !== messageEntryId) continue;
+    if (entry.type !== "custom" || entry.customType !== ASSISTANT_OUTLINE_COMMENTS_TYPE) continue;
 
-    const nextComments = customEntry.data?.comments ?? {};
-    comments = Object.fromEntries(
-      Object.entries(nextComments)
-        .filter(([key, value]) => typeof key === "string" && typeof value === "string")
-        .map(([key, value]) => [key, value.trim()]),
-    );
+    if (
+      !isCommentDataObject(entry.data) ||
+      !("messageEntryId" in entry.data) ||
+      entry.data.messageEntryId !== messageEntryId
+    )
+      continue;
+
+    comments = {};
+
+    if (!("comments" in entry.data) || !isCommentDataObject(entry.data.comments)) continue;
+
+    for (const [key, value] of Object.entries(entry.data.comments)) {
+      if (isCommentText(value)) comments[key] = value.trim();
+    }
   }
 
   return comments;

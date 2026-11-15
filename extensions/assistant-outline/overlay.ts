@@ -1,5 +1,5 @@
 import { getMarkdownTheme, type Theme } from "@earendil-works/pi-coding-agent";
-import { Key, Markdown, matchesKey, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import { Key, Markdown, matchesKey, type OverlayOptions, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import { formatMarkedCommandsForPiEditor } from "./command-editor-export";
 import type { CommandSnippet } from "./command-extract";
 import { buildExportedSectionsPayload } from "./comments";
@@ -42,7 +42,7 @@ export const OVERLAY_OPTIONS = {
   minWidth: OVERLAY_MIN_WIDTH,
   maxHeight: "90%",
   margin: OVERLAY_MARGIN,
-};
+} satisfies OverlayOptions;
 const FRAME_COLOR = "muted";
 const FRAME_HEADER_HEIGHT = 6;
 const FRAME_FOOTER_HEIGHT = 3;
@@ -527,7 +527,7 @@ export class AssistantOutlineOverlay {
       return;
     }
 
-    if (data === "G") {
+    if (matchesKey(data, Key.shift("g"))) {
       this.pendingG = false;
       if (this.focusPane === "preview") {
         this.previewScroll = Number.MAX_SAFE_INTEGER;
@@ -606,7 +606,7 @@ export class AssistantOutlineOverlay {
       return;
     }
 
-    if (data === "E" && this.mode === "commands") {
+    if (matchesKey(data, Key.shift("e")) && this.mode === "commands") {
       void this.callbacks.onOpenAllCommands();
       return;
     }

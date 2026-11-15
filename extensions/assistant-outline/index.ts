@@ -8,7 +8,12 @@ import { getNodeMarkdown, getNodePath, parseAssistantOutline } from "./markdown-
 import { AssistantOutlineOverlay, MIN_TERMINAL_COLUMNS, OVERLAY_OPTIONS } from "./overlay";
 import { pickAssistantMessage } from "./picker";
 import { getAssistantResponseById, getLatestAssistantResponse } from "./session";
-import type { AssistantResponseSelection, ParsedAssistantOutline, SectionComments } from "./types";
+import type {
+  AssistantResponseSelection,
+  ExportedSectionsPayload,
+  ParsedAssistantOutline,
+  SectionComments,
+} from "./types";
 
 const COMMAND_NAME = "assistant-outline";
 
@@ -39,7 +44,7 @@ function parseMode(args: string): { mode: Mode } | { error: string } {
 
 export default function assistantOutlineExtension(pi: ExtensionAPI) {
   const openAssistantOutline = async (args: string, ctx: ExtensionContext) => {
-    if (!ctx.hasUI) {
+    if (ctx.mode !== "tui") {
       ctx.ui.notify(`/${COMMAND_NAME} requires interactive mode`, "error");
       return;
     }
@@ -93,7 +98,7 @@ export default function assistantOutlineExtension(pi: ExtensionAPI) {
     let comments: SectionComments = getStoredCommentsForMessage(branch, selection.messageEntryId);
     let commandSnippets: CommandSnippet[] = extractCommandSnippets(currentDocument);
 
-    const exportedSections = await ctx.ui.custom(
+    const exportedSections = await ctx.ui.custom<ExportedSectionsPayload | undefined>(
       (tui, theme, _kb, done) => {
         const reloadDocument = async () => {
           // When pinned to a specific entry (picker path), re-fetch THAT
@@ -138,7 +143,10 @@ export default function assistantOutlineExtension(pi: ExtensionAPI) {
               stdio: "inherit",
               shell: process.platform === "win32",
             });
-            if (result.status && result.status !== 0) {
+
+            if (result.error) {
+              ctx.ui.notify(`Failed to open editor: ${result.error.message}`, "warning");
+            } else if (result.status !== 0) {
               ctx.ui.notify(`Editor exited with code ${result.status}`, "warning");
             }
           } finally {

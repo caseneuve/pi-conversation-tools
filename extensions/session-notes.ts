@@ -246,7 +246,9 @@ async function editNoteInExternalEditor(
       shell: process.platform === "win32",
     });
 
-    if (result.status && result.status !== 0) {
+    if (result.error) throw result.error;
+
+    if (result.status !== 0) {
       return { ok: false, message: `Editor exited with code ${result.status}` };
     }
 
@@ -262,7 +264,7 @@ async function editNoteInExternalEditor(
   }
 }
 
-class SessionNotesComponent {
+export class SessionNotesComponent {
   private notes: SessionNote[] = [];
   private selectedId?: string;
   private listScroll = 0;
@@ -527,7 +529,8 @@ class SessionNotesComponent {
       else if (matchesKey(data, Key.ctrl("u")) || matchesKey(data, "pageUp")) this.previewScroll -= page;
       else if (matchesKey(data, Key.ctrl("d")) || matchesKey(data, "pageDown")) this.previewScroll += page;
       else if (matchesKey(data, Key.home) || data === "g") this.previewScroll = 0;
-      else if (matchesKey(data, Key.end) || data === "G") this.previewScroll = Number.MAX_SAFE_INTEGER;
+      else if (matchesKey(data, Key.end) || matchesKey(data, Key.shift("g")))
+        this.previewScroll = Number.MAX_SAFE_INTEGER;
       else return;
 
       this.requestRender();
@@ -539,7 +542,7 @@ class SessionNotesComponent {
     else if (matchesKey(data, "pageUp")) this.moveSelection(-page);
     else if (matchesKey(data, "pageDown")) this.moveSelection(page);
     else if (matchesKey(data, Key.home) || data === "g") this.moveSelection(-9999);
-    else if (matchesKey(data, Key.end) || data === "G") this.moveSelection(9999);
+    else if (matchesKey(data, Key.end) || matchesKey(data, Key.shift("g"))) this.moveSelection(9999);
     else return;
 
     this.requestRender();
@@ -686,7 +689,7 @@ export default function sessionNotesExtension(pi: ExtensionAPI) {
       return;
     }
 
-    if (!ctx.hasUI) {
+    if (ctx.mode !== "tui") {
       ctx.ui.notify(`/${COMMAND_NAME} requires interactive mode`, "error");
       return;
     }

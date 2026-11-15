@@ -1,5 +1,8 @@
 # Changes to this file will be overwritten by Copier updates.
 # Review it with the template source before running `copier update`.
+# Generation/update provenance remains v0.3.0: no Copier update was run.
+# Baseline 08350707812e7036ab9477e879c1b029febd552b was adopted manually;
+# that local template commit is unpublished, so remote resolution is not verified.
 _commit: v0.3.0
 _src_path: git@github.com:caseneuve/template-pi-package.git
 copyright_year: 2026
@@ -9,7 +12,7 @@ initial_version: 0.0.0
 package_description: Conversation navigation and transient session-note tools for
   Pi.
 package_name: pi-conversation-tools
-pi_api_version: 0.85.1
+pi_api_version: 1.5.2
 repository_name: pi-conversation-tools
 resource_types:
 - extensions

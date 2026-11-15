@@ -4,6 +4,9 @@
   "description": "Conversation navigation and transient session-note tools for Pi.",
   "type": "module",
   "license": "MIT",
+  "engines": {
+    "node": ">=22.19.0"
+  },
   "copyright": "Copyright (c) 2026 Caseneuve",
   "keywords": [
     "pi-package",
@@ -25,8 +28,8 @@
     ]
   },
   "scripts": {
-    "check": "biome check --write --error-on-warnings . && oxlint",
-    "check:ci": "biome check --error-on-warnings . && oxlint",
+    "check": "biome check --write --error-on-warnings .",
+    "check:ci": "biome check --error-on-warnings .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -40,13 +43,11 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.5",
-    "@earendil-works/pi-coding-agent": "0.85.1",
-    "@earendil-works/pi-tui": "0.85.1",
+    "@earendil-works/pi-coding-agent": "1.5.2",
+    "@earendil-works/pi-tui": "1.5.2",
     "@j178/prek": "0.4.14",
-    "@oxlint/plugins": "1.82.0",
     "@types/node": "24.10.1",
     "@vitest/coverage-v8": "4.1.9",
-    "oxlint": "1.82.0",
     "typescript": "5.9.3",
     "vitest": "4.1.9"
   },

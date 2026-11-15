@@ -1,6 +1,6 @@
 ---
 title: restore supported Pi API type compatibility
-status: open
+status: closed
 priority: high
 type: bug
 labels: [release-blocker, pi-api]
@@ -24,5 +24,7 @@ Literal sources fail type checking against the selected `@earendil-works/pi-codi
 ## Notes
 
 Observed during extraction. This blocks release.
+
+Superseded by migration 0009: user approved current stable Pi 1.5.2 instead of the historical 0.85.1 target. The same seven type errors reproduced against 1.5.2 and are repaired with explicit custom UI result/overlay types, minimum picker context and validated comment values. Preserve this historical target decision, but use 0009 for current validation and review evidence.
 
 The supported compatibility pin was changed from the template default, Pi 0.84.2, to Pi 0.85.1 by human decision on 2026-09-13. `package.json`, `package-lock.json`, and Copier answers must keep that version aligned.

@@ -16,13 +16,17 @@ Do not redesign behavior or expand platform support without an explicit todo.
 
 ## Tooling
 
-- In a newly generated checkout, run `git init -b master && npm install` once, bootstrap anti-slop as described below, and commit the resulting `package-lock.json`. Thereafter use npm and the committed lockfile: `npm ci` for clean installs.
-- Biome owns TypeScript formatting and baseline linting. Oxlint runs additional extension checks. Use 2-space indentation; do not add Prettier or ESLint.
-- Bootstrap the current anti-slop rules through Dillon Mulroy's upstream skill; do not copy them from another checkout. If `tools/oxlint/anti-slop/index.ts` is absent, run `npx skills add dmmulroy/anti-slop --skill install-anti-slop`, then use the installed `install-anti-slop` skill to configure this repository before changing extension code.
+- In a newly generated checkout, run `git init -b master && npm install` once and commit the resulting `package-lock.json`. Thereafter use npm and the committed lockfile: `npm ci` for clean installs.
+- Requires Node >=22.19.0. Biome owns TypeScript formatting and baseline linting. Use 2-space indentation; do not add Prettier or ESLint.
+- Extra local anti-slop checks remain separate from package scripts and CI. Do not vendor rules or install upstream tooling in this package; preserve ignored local copies.
 - `npm run check` may write safe Biome fixes. `npm run check:ci` must not modify files.
 - Prek installs through a guarded `prepare` script during development and runs the mutating Biome check before commits. Production-only Pi Git installs skip hook installation.
 - `npm run typecheck` verifies the pinned development Pi API surface.
 - Use Vitest for tests and V8 coverage for extension code.
+
+## Ownership
+
+Application resources, tests, metadata/lockfile, README, changelog and this file are repository-owned copy-only seeds under the reviewed Copier baseline. Shared tooling updates are opt-in and must preserve package customizations; apply metadata and instruction changes manually. Keep local `.pi/*` settings/state untracked; `.pi/docs/` may contain deliberately tracked shared notes.
 
 ## Engineering discipline
 
@@ -36,7 +40,7 @@ Do not redesign behavior or expand platform support without an explicit todo.
 
 ## Release procedure
 
-Use npm-compatible CalVer `YYYY.M.D[.PATCH]`; release tags are annotated `v<version>` tags.
+Use three-component unpadded CalVer `YYYY.M.D`; release tags are annotated `v<version>` tags. Agree on valid npm SemVer before a second same-day release; never append a fourth numeric component.
 
 1. Complete automated checks and focused local/Git install validation.
 2. Update `CHANGELOG.md` and `package.json`.

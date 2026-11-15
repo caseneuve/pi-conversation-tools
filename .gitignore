@@ -4,3 +4,8 @@
 coverage/
 node_modules/
 tools/oxlint/anti-slop/
+
+# Local Pi settings/state stay local; only reviewed shared notes may be tracked.
+!/.pi/
+.pi/*
+!.pi/docs/

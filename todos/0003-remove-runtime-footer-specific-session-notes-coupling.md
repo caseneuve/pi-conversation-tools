@@ -1,6 +1,6 @@
 ---
 title: remove runtime-footer-specific session-notes coupling
-status: blocked
+status: closed
 priority: high
 type: chore
 labels: [release-blocker, coupling]
@@ -34,4 +34,6 @@ Resolution belongs in `pi-runtime-ui`; this todo tracks the cross-package releas
 
 ## Notes
 
-Do not release `pi-conversation-tools` while this is unresolved.
+Reconciled during migration 0009 (2026-11-15): this is a stale blocker, not remaining implementation work. Read-only inspection of pi-runtime-ui at 38fb58ed6d2c70743430c7b51b57acef54874974 confirms generic `status:<key>` classification/rendering, no dedicated session-notes renderer, and tests for removed producer aliases plus ANSI preservation. No runtime-ui edits are authorized or needed here. Original checkboxes retain historical scope, not current failures.
+
+Migration 0009 live evidence now also exercises actual read-only pi-runtime-ui at that SHA, filtered to its sole runtime-footer entry, with canonical sandbox config `status:session-notes`. Native local installs of both packages show note status create [0/1], toggle [1/1], reload persistence and delete/clear. Stock Pi and an independent generic test consumer were also exercised. Artifacts: `~/.cache/pi-migration/evidence/conversation-tools/runtime-composition-{note,status-done,reload,status-clear}.png` plus `runtime-state/`. The runtime-ui migration will revalidate its upgraded composition; no dedicated consumer is needed.

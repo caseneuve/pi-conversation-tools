@@ -22,6 +22,10 @@ The literal dotagents extension sources and their behavioral tests do not pass t
 - [ ] Preserve commands, session-entry formats, overlay behavior, editor behavior, and clipboard behavior.
 - [ ] Run the focused anti-slop command and `npm run check:ci` successfully.
 
+## Migration boundary (0009, 2026-11-15)
+
+Approved baseline supersedes the per-package vendoring/CI Oxlint requirements: portable checks are Biome-only, with no private runner dependency. Existing ignored rules are preserved. The separate central runner is run explicitly on changed JS/TS (including changed tests); its diagnostics are retained in migration evidence. Broad pre-existing readability cleanup is not part of this migration and this todo remains open for separately scoped work.
+
 ## Notes
 
 Observed after literal source copy. The current Oxlint output has widespread `require-readable-spacing` failures and source-specific semantic-rule findings. This blocks release.

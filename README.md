@@ -13,20 +13,25 @@ Both extensions may be filtered independently through Pi package settings:
 {
   "packages": [{
     "source": "git:github.com/caseneuve/pi-conversation-tools@<reviewed-tag-or-commit-sha>",
-    "extensions": ["assistant-outline"]
+    "extensions": ["extensions/assistant-outline/index.ts"]
   }]
 }
 ```
 
-Use `"extensions": ["session-notes"]` for notes only, or omit `extensions` to load both.
+Use `"extensions": ["extensions/session-notes.ts"]` for notes only, omit `extensions` to load both, or use `[]` to disable both. Filters narrow the explicit manifest; helper modules are not separate extension entries.
 
 ## Install
 
-During development:
+Requires Node >=22.19.0; development targets Pi 1.5.2 with exact API pins and host-provided `*` peers.
+
+Install a reviewed local checkout natively:
 
 ```bash
-pi install ~/git/pi/pi-conversation-tools
+pi install /absolute/path/to/pi-conversation-tools     # personal
+pi install -l /absolute/path/to/pi-conversation-tools  # current project
 ```
+
+Local directories load in place; Pi does not install their dependencies. Run `npm ci` in the checkout separately for development. Project packages require trust; review project configuration before using `pi install -l --approve /absolute/path/to/pi-conversation-tools` if installation refuses an untrusted project.
 
 For normal use, install a reviewed immutable ref:
 
@@ -45,6 +50,10 @@ Command clipboard fallback tries Linux `wl-copy`, then `xclip -selection clipboa
 ## session-notes
 
 `/session-notes <text>` creates a quick TODO note. With no text, `/session-notes` or `Alt+N` opens the notes overlay. Use `a` to add, `e` to edit, `x` to delete marked notes, `m` to mark, `s` to toggle TODO/DONE, `t` to change layout, `enter`/`tab` to change focus, and `q`/`esc` to insert marked notes.
+
+Notes currently follow the active conversation branch: `/tree` restores that branch’s latest snapshot, and resume/reload restores the selected branch. Fork/clone may inherit copied snapshots. Session-wide behavior is a separate proposal in todo 0002, not part of this migration.
+
+Pi 1.5.2 writes a new session file only once it contains a user or assistant message. Notes created before any conversation remain in memory until then; do not rely on notes-only sessions surviving process exit.
 
 Snapshots use `custom` session entries with custom type `session-notes`; this identity is preserved for existing sessions. The extension publishes the stable `session-notes` extension-status key. Its dim ANSI styling is producer-owned, so custom footer consumers should render `footerData.getExtensionStatuses().get("session-notes")` without restyling it.
 
@@ -65,9 +74,17 @@ npm run pack:check
 
 Manual parity checks: start Pi with each resource independently enabled, reload it, exercise both commands and shortcuts, test narrow overlays, external-editor flows, command clipboard fallback, marked exports, and session resume compatibility. Verify local-path installation in an isolated `PI_CODING_AGENT_DIR`. After a reviewed immutable ref exists, verify its Git installation in a separate isolated configuration.
 
-## Release blockers
+`check:ci` is non-mutating Biome; `check` and the Prek development hook may apply safe fixes. Extra local anti-slop checks are a separate author workflow, not a vendored dependency or portable CI requirement.
 
-Do not release while `todos/0003-remove-runtime-footer-specific-session-notes-coupling.md` or `todos/0004-resolve-template-anti-slop-readability-violations.md` remains unresolved.
+## Ownership and updates
+
+Application code, tests, metadata/lockfile, README, changelog and AGENTS are repository-owned copy-only seeds. This migration manually adopts Copier baseline `08350707812e7036ab9477e879c1b029febd552b`; shared tooling updates remain opt-in and reviewed. Metadata and instruction changes are manual; resource answers are not an update-time resource manager.
+
+`pi update` updates Pi itself; `pi update --extensions` reconciles installed packages, not Copier or local checkout dependencies. Local `.pi/*` settings/state are ignored; deliberately shared `.pi/docs/` may be tracked. Git ignores are separate from the npm `files` allowlist.
+
+## Release gates
+
+Unfinished testing/readability work remains tracked in todos 0006 and 0008; this migration does not complete that coverage epic. Generic `status:session-notes` consumption already exists in runtime-ui (see reconciled todo 0003). Immutable Git installation and independent live/screenshot review remain required before release.
 
 ## License
 

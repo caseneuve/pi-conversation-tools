@@ -60,7 +60,9 @@ export async function editSectionComment(params: EditCommentParams): Promise<Edi
       shell: process.platform === "win32",
     });
 
-    if (result.status && result.status !== 0) {
+    if (result.error) throw result.error;
+
+    if (result.status !== 0) {
       return {
         ok: false,
         reason: "editor-error",

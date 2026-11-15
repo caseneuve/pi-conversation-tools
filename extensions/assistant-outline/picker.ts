@@ -1,4 +1,4 @@
-import type { ExtensionCommandContext, SessionEntry, SessionManager } from "@earendil-works/pi-coding-agent";
+import type { ExtensionContext, SessionEntry, SessionManager } from "@earendil-works/pi-coding-agent";
 import { TreeSelectorComponent } from "@earendil-works/pi-coding-agent";
 
 type SessionTreeNode = ReturnType<SessionManager["getTree"]>[number];
@@ -83,7 +83,7 @@ function findLatestAssistantIdOnBranch(branch: readonly SessionEntry[]): string 
  * The initial selection is the latest assistant on the active branch so
  * pressing Enter immediately behaves like the `latest` default.
  */
-export async function pickAssistantMessage(ctx: ExtensionCommandContext): Promise<string | undefined> {
+export async function pickAssistantMessage(ctx: ExtensionContext): Promise<string | undefined> {
   const fullTree = ctx.sessionManager.getTree();
   const filteredTree = filterTreeToAssistants(fullTree);
 
